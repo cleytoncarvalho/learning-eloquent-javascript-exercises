@@ -15,12 +15,11 @@ function drawTriangle(height = 0) {
     return;
   }
 
-  let row = "";
+  let triangle = "";
 
-  for (i = 0; i < height; i++) {
-    row += "#";
-
-    console.log(row);
+  while (triangle.length < height) {
+    triangle += "#";
+    console.log(triangle);
   }
 }
 
