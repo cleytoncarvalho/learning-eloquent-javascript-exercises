@@ -12,15 +12,8 @@ function printFizzBuzz() {
   for (i = 0; i < 100; i++) {
     let number = i + 1;
     let elementToPrint = number;
-    let isDivisibleBy3 = false;
-    let isDivisibleBy5 = false;
-
-    if (number % 3 === 0) {
-      isDivisibleBy3 = true;
-    }
-    if (number % 5 === 0) {
-      isDivisibleBy5 = true;
-    }
+    let isDivisibleBy3 = isDivisibleBy(number, 3);
+    let isDivisibleBy5 = isDivisibleBy(number, 5);
 
     if (isDivisibleBy3 && isDivisibleBy5) {
       elementToPrint = "FizzBuzz";
@@ -32,6 +25,10 @@ function printFizzBuzz() {
 
     console.log(elementToPrint);
   }
+}
+
+function isDivisibleBy(number, divider) {
+  return number % divider === 0;
 }
 
 printFizzBuzz();
