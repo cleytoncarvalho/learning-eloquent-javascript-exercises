@@ -24,14 +24,17 @@ function range(start = 0, end = 0, step) {
 
   if (step > 0) {
     while (numberToAdd <= end) {
-      numbers.push(numberToAdd);
-      numberToAdd += step;
+      addNumber();
     }
   } else {
     while (numberToAdd >= end) {
-      numbers.push(numberToAdd);
-      numberToAdd += step;
+      addNumber();
     }
+  }
+
+  function addNumber() {
+    numbers.push(numberToAdd);
+    numberToAdd += step;
   }
 
   return numbers;
