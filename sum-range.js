@@ -14,6 +14,10 @@ works with negative step values so that range(5, 2, -1) produces [5, 4, 3, 2].
 console.log(sum(range(1, 10)));
 */
 
+console.log(range(1, 10));
+console.log(range(10, 1));
+console.log(sum(range(10, 1)));
+
 function range(start = 0, end = 0, step) {
   if (!step) {
     step = start <= end ? 1 : -1;
@@ -43,7 +47,3 @@ function range(start = 0, end = 0, step) {
 function sum(numbers = []) {
   return numbers.reduce((preValue, currValue) => preValue + currValue);
 }
-
-console.log(range(1, 10));
-console.log(range(10, 1));
-console.log(sum(range(10, 1)));

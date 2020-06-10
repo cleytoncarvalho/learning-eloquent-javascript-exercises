@@ -8,6 +8,8 @@ divisible by both 3 and 5 (and still print "Fizz" or "Buzz" for numbers divisibl
 one of those).
 */
 
+printFizzBuzz();
+
 function printFizzBuzz() {
   for (i = 0; i < 100; i++) {
     let number = i + 1;
@@ -30,5 +32,3 @@ function printFizzBuzz() {
 function isDivisibleBy(number, divider) {
   return number % divider === 0;
 }
-
-printFizzBuzz();

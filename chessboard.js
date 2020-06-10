@@ -15,6 +15,8 @@ Passing this string to console.log should show something like this:
 # # # # 
 */
 
+printChessboard(8);
+
 function printChessboard(size) {
   if (!size) {
     return;
@@ -34,5 +36,3 @@ function printChessboard(size) {
 
   console.log(chessboard);
 }
-
-printChessboard(8);

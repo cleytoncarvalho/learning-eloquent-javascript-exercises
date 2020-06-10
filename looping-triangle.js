@@ -10,6 +10,8 @@ Write a loop that makes seven calls to console.log to output the following trian
 #######
 */
 
+drawTriangle(7);
+
 function drawTriangle(height = 0) {
   if (!height) {
     return;
@@ -22,5 +24,3 @@ function drawTriangle(height = 0) {
     console.log(triangle);
   }
 }
-
-drawTriangle(7);

@@ -17,6 +17,16 @@ console.log(arrayValue);
 // → [5, 4, 3, 2, 1]
 */
 
+console.time("reverseArray");
+console.log(reverseArray([1, 2, 3, 4, 5]));
+console.timeEnd("reverseArray");
+
+console.time("reverseArrayInPlace");
+let arrayValue = [1, 2, 3, 4, 5];
+reverseArrayInPlace();
+console.log(arrayValue);
+console.timeEnd("reverseArrayInPlace");
+
 function reverseArray(arrayReverse = []) {
   let startKey = 0;
   let endKey = arrayReverse.length - 1;
@@ -50,13 +60,3 @@ function reverseArrayInPlace() {
     endKey--;
   }
 }
-
-console.time("reverseArray");
-console.log(reverseArray([1, 2, 3, 4, 5]));
-console.timeEnd("reverseArray");
-
-console.time("reverseArrayInPlace");
-let arrayValue = [1, 2, 3, 4, 5];
-reverseArrayInPlace();
-console.log(arrayValue);
-console.timeEnd("reverseArrayInPlace");
