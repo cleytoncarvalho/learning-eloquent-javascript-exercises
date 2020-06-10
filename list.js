@@ -23,6 +23,10 @@ console.log(nth(arrayToList([10, 20, 30]), 1));
 // → 20
 */
 
+console.log(arrayToList([10, 20, 30]));
+console.log(listToArray(arrayToList([10, 20, 30])));
+console.log(nth(arrayToList([10, 20, 30]), 1));
+
 function arrayToList(array = []) {
   array.reverse();
 
@@ -35,4 +39,41 @@ function arrayToList(array = []) {
   return list;
 }
 
-console.log(arrayToList([10, 20, 30]));
+function listToArray(list = {}) {
+  const array = [];
+
+  addValueToArray(list);
+
+  function addValueToArray(item = null) {
+    array.push(item.value);
+
+    if (item.rest) {
+      addValueToArray(item.rest);
+    }
+  }
+
+  return array;
+}
+
+function prepend() {
+  //Could not understand this one. The example seems not to match the explanation.
+}
+
+function nth(list = {}, position = 0) {
+  let positionCounter = 0;
+
+  function getValueFromList(subList = {}) {
+    if (!subList) {
+      return undefined;
+    }
+
+    if (positionCounter === position) {
+      return subList.value;
+    }
+
+    positionCounter++;
+    return getValueFromList(subList.rest);
+  }
+
+  return getValueFromList(list);
+}
