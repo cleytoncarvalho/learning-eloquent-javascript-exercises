@@ -4,15 +4,6 @@ characters to separate lines. At each position of the grid there is either a spa
 or a "#" character. The characters should form a chessboard.
 
 Passing this string to console.log should show something like this:
-
- # # # #
-# # # # 
- # # # #
-# # # # 
- # # # #
-# # # # 
- # # # #
-# # # # 
 */
 
 printChessboard(8);
