@@ -19,23 +19,23 @@ a group that contains all the values produced by iterating over it.
 
 class Group {
   constructor() {
-    this.group = [];
+    this.values = [];
   }
 
   add(value) {
-    if (this.group.indexOf(value) < 0) {
-      this.group.push(value);
+    if (this.values.indexOf(value) < 0) {
+      this.values.push(value);
     }
   }
 
   delete(value) {
-    if (this.group.indexOf(value) >= 0) {
-      this.group = this.group.filter((item) => item !== value);
+    if (this.values.indexOf(value) >= 0) {
+      this.values = this.values.filter((item) => item !== value);
     }
   }
 
   has(value) {
-    return this.group.indexOf(value) >= 0 ? true : false;
+    return this.values.indexOf(value) >= 0;
   }
 
   static from(values) {
@@ -49,6 +49,27 @@ class Group {
   }
 }
 
+class GroupIterator {
+  constructor(group) {
+    this.values = group.values;
+    this.currentIndex = 0;
+    this.lastIndex = this.values.length - 1;
+  }
+
+  next() {
+    if (this.currentIndex > this.lastIndex) return { done: true };
+
+    return {
+      value: this.values[this.currentIndex++],
+      done: false,
+    };
+  }
+}
+
+Group.prototype[Symbol.iterator] = function () {
+  return new GroupIterator(this);
+};
+
 let group = Group.from([10, 20]);
 console.log(group.has(10));
 // → true
@@ -58,3 +79,9 @@ group.add(10);
 group.delete(10);
 console.log(group.has(10));
 // → false
+for (let value of Group.from(["a", "b", "c"])) {
+  console.log(value);
+}
+// → a
+// → b
+// → c
