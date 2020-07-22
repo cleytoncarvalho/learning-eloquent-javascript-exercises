@@ -18,7 +18,7 @@ A word longer than six letters
 A word without the letter e (or E)
 */
 
-verify(/ca(r|t)/, ["my car", "bad cats"], ["camper", "high art"]);
+verify(/ca[rt]/, ["my car", "bad cats"], ["camper", "high art"]);
 
 verify(/pr?op/, ["pop culture", "mad props"], ["plop", "prrrop"]);
 
@@ -34,9 +34,15 @@ verify(
   ["ruinous", "consciousness"]
 );
 
-verify(/\s(\.|,|:|;)/, ["bad punctuation ."], ["escape the period"]);
+verify(/\s[.,:;]/, ["bad punctuation ."], ["escape the period"]);
 
 verify(/\w{7}\b/, ["hottentottententen"], ["no", "hotten totten tenten"]);
+
+verify(
+  /\b[^\We]+\b/i,
+  ["red platypus", "wobbling nest"],
+  ["earth bed", "learning ape", "BEET"]
+);
 
 function verify(regexp, yes, no) {
   if (regexp.source == "...") return;
