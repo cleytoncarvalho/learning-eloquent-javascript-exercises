@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Build a Table</title>
+    <meta charset="utf-8" />
+  </head>
+
+  <body>
+    <h1>Mountains</h1>
+
+    <div id="mountains"></div>
+
+    <script>
+      const MOUNTAINS = [
+        { name: "Kilimanjaro", height: 5895, place: "Tanzania" },
+        { name: "Everest", height: 8848, place: "Nepal" },
+        { name: "Mount Fuji", height: 3776, place: "Japan" },
+        { name: "Vaalserberg", height: 323, place: "Netherlands" },
+        { name: "Denali", height: 6168, place: "United States" },
+        { name: "Popocatepetl", height: 5465, place: "Mexico" },
+        { name: "Mont Blanc", height: 4808, place: "Italy/France" },
+      ];
+
+      const mountainsTable = mountainsTableFactory(MOUNTAINS);
+      mountainsTable.build();
+
+      function mountainsTableFactory(mountains) {
+        let tableNode;
+        let tableHeaderNode;
+
+        function build() {
+          validateMountainArray();
+          createTableNode();
+          createTableHeaderNode();
+          createTableHeaderContent();
+          createTableContent();
+        }
+
+        function validateMountainArray() {
+          if (mountains.length <= 0) {
+            throw new Error("The mountain array can't be empty.");
+          }
+        }
+
+        function createTableNode() {
+          tableNode = document.createElement("table");
+          document.getElementById("mountains").appendChild(tableNode);
+        }
+
+        function createTableHeaderNode() {
+          tableHeaderNode = document.createElement("tr");
+          tableNode.appendChild(tableHeaderNode);
+        }
+
+        function createTableHeaderContent() {
+          const mountainsProperties = Object.keys(mountains[0]);
+
+          mountainsProperties.forEach((prop) => {
+            const columnNode = document.createElement("th");
+            const textNode = document.createTextNode(prop);
+
+            columnNode.appendChild(textNode);
+            tableHeaderNode.appendChild(columnNode);
+          });
+        }
+
+        function createTableContent() {
+          mountains.forEach((item) => {
+            const rowNode = document.createElement("tr");
+
+            const mountainsProperties = Object.keys(mountains[0]);
+
+            mountainsProperties.forEach((prop) => {
+              const cellValue = item[prop];
+              const cellNode = document.createElement("td");
+              const textNode = document.createTextNode(cellValue);
+
+              if (typeof cellValue === "number") {
+                cellNode.style.textAlign = "right";
+              }
+
+              cellNode.appendChild(textNode);
+              rowNode.appendChild(cellNode);
+            });
+
+            tableNode.appendChild(rowNode);
+          });
+        }
+
+        return {
+          build,
+        };
+      }
+    </script>
+  </body>
+</html>
