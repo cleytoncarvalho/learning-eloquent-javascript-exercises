@@ -1,0 +1,124 @@
+<!--
+Write a page that displays a balloon (using the balloon emoji, 🎈). When you press
+the up arrow, it should inflate (grow) 10 percent, and when you press the down arrow,
+it should deflate (shrink) 10 percent.
+
+You can control the size of text (emoji are text) by setting the font-size CSS property
+(style.fontSize) on its parent element. Remember to include a unit in the value—for
+example, pixels (10px).
+
+The key names of the arrow keys are "ArrowUp" and "ArrowDown". Make sure the keys change
+only the balloon, without scrolling the page.
+
+When that works, add a feature where, if you blow up the balloon past a certain size,
+it explodes. In this case, exploding means that it is replaced with an 💥 emoji, and the
+event handler is removed (so that you can’t inflate or deflate the explosion).
+-->
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Handling Events</title>
+    <meta charset="utf-8" />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      #container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container">
+      <div id="balloon1">🎈</div>
+    </div>
+
+    <script>
+      const redBalloon = balloon("balloon1");
+
+      window.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowUp") {
+          redBalloon.increaseSizeByPercentage(10);
+        }
+        if (e.key === "ArrowDown") {
+          redBalloon.decreaseSizeByPercentage(10);
+        }
+      });
+
+      function balloon(balloonId) {
+        const balloonNode = document.getElementById(balloonId);
+        const balloonMinSize = 20;
+        const balloonMaxSize = 200;
+        let balloonSize = 50;
+        let balloonHadExploded = false;
+
+        const increaseSizeByPercentage = function (percentage) {
+          updateSize("increase", percentage);
+        };
+
+        const decreaseSizeByPercentage = function (percentage) {
+          updateSize("decrease", percentage);
+        };
+
+        const updateSize = function (type = "increase", percentage = 0) {
+          if (balloonHadExploded) {
+            return;
+          }
+          if (percentage <= 0) {
+            return;
+          }
+
+          const sizeToAddOrSubtract = (balloonSize / 100) * percentage;
+          let newSize = balloonSize;
+
+          if (type === "increase") {
+            newSize += sizeToAddOrSubtract;
+
+            if (newSize > balloonMaxSize) {
+              explode();
+            }
+          } else if (type === "decrease") {
+            newSize -= sizeToAddOrSubtract;
+
+            if (newSize < balloonMinSize) {
+              return;
+            }
+          }
+
+          balloonSize = newSize;
+
+          updateBalloonNodeFontSize();
+        };
+
+        const updateBalloonNodeFontSize = function () {
+          balloonNode.style.fontSize = `${balloonSize}px`;
+        };
+
+        const explode = function () {
+          balloonNode.textContent = "💥";
+          balloonHadExploded = true;
+        };
+
+        updateBalloonNodeFontSize();
+
+        return {
+          increaseSizeByPercentage,
+          decreaseSizeByPercentage,
+        };
+      }
+    </script>
+  </body>
+</html>
