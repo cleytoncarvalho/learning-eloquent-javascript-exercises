@@ -32,86 +32,129 @@ event handler is removed (so that you can’t inflate or deflate the explosion).
       body {
         height: 100%;
       }
+
       #container {
         height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
       }
+
+      @keyframes balloonKeyframes {
+        from {
+          top: 40px;
+        }
+        to {
+          top: -40px;
+        }
+      }
+
+      @keyframes explosionKeyframes {
+        from {
+          top: 3px;
+          left: 5px;
+        }
+        to {
+          top: -3px;
+        }
+      }
+
+      .balloonAnimation {
+        position: relative;
+        top: 40px;
+        animation-name: balloonKeyframes;
+        animation-duration: 2s;
+        animation-direction: alternate;
+        animation-timing-function: cubic-bezier(0.41, 0.12, 0.48, 1.01);
+        animation-iteration-count: infinite;
+      }
+
+      .explosionAnimation {
+        position: relative;
+        top: 3px;
+        animation-name: explosionKeyframes;
+        animation-duration: 0.1s;
+        animation-direction: alternate;
+        animation-timing-function: cubic-bezier(0.17, 0.65, 0.43, 0.86);
+        animation-iteration-count: infinite;
+      }
     </style>
   </head>
 
   <body>
     <div id="container">
-      <div id="balloon1">🎈</div>
+      <div id="balloon1" class="balloonAnimation">🎈</div>
     </div>
 
     <script>
       const redBalloon = balloon("balloon1");
 
-      window.addEventListener("keydown", function (e) {
-        if (e.key === "ArrowUp") {
-          redBalloon.increaseSizeByPercentage(10);
-        }
-        if (e.key === "ArrowDown") {
-          redBalloon.decreaseSizeByPercentage(10);
-        }
-      });
-
       function balloon(balloonId) {
         const nodeElement = document.getElementById(balloonId);
         const minSize = 20;
         const maxSize = 200;
-        let size = 50;
-        let hadExploded = false;
+        let currentSize = 50;
 
-        updateNodeFontSize();
+        updateNodeFontSize(currentSize);
+        addKeyListener();
+
+        function addKeyListener() {
+          window.addEventListener("keydown", controleKeyListener);
+        }
+
+        function removeKeyListener() {
+          window.removeEventListener("keydown", controleKeyListener);
+        }
+
+        function controleKeyListener(e) {
+          if (e.key === "ArrowUp") {
+            redBalloon.increaseSizeByPercentage(10);
+          }
+          if (e.key === "ArrowDown") {
+            redBalloon.decreaseSizeByPercentage(10);
+          }
+        }
 
         function increaseSizeByPercentage(percentage) {
-          updateSize("increase", percentage);
-        }
-
-        function decreaseSizeByPercentage(percentage) {
-          updateSize("decrease", percentage);
-        }
-
-        function updateSize(type = "increase", percentage = 0) {
-          if (hadExploded) {
-            return;
-          }
           if (percentage <= 0) {
             return;
           }
 
-          const sizeToAddOrSubtract = (size / 100) * percentage;
-          let newSize = size;
+          const sizeToAdd = (currentSize / 100) * percentage;
+          const newSize = currentSize + sizeToAdd;
 
-          if (type === "increase") {
-            newSize += sizeToAddOrSubtract;
-          } else if (type === "decrease") {
-            newSize -= sizeToAddOrSubtract;
+          updateNodeFontSize(newSize);
 
-            if (newSize < minSize) {
-              return;
-            }
-          }
-
-          size = newSize;
-
-          updateNodeFontSize();
-
-          if (size > maxSize) {
+          if (newSize > maxSize) {
             explode();
           }
         }
 
-        function updateNodeFontSize() {
+        function decreaseSizeByPercentage(percentage) {
+          if (percentage <= 0) {
+            return;
+          }
+
+          const sizeToSubtract = (currentSize / 100) * percentage;
+          const newSize = currentSize - sizeToSubtract;
+
+          if (newSize < minSize) {
+            return;
+          }
+
+          updateNodeFontSize(newSize);
+        }
+
+        function updateNodeFontSize(size) {
+          currentSize = size;
           nodeElement.style.fontSize = `${size}px`;
         }
 
         function explode() {
+          removeKeyListener();
           nodeElement.textContent = "💥";
-          hadExploded = true;
+          nodeElement.classList.remove("balloonAnimation");
+          nodeElement.classList.add("explosionAnimation");
         }
 
         return {
