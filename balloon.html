@@ -59,60 +59,60 @@ event handler is removed (so that you can’t inflate or deflate the explosion).
       });
 
       function balloon(balloonId) {
-        const balloonNode = document.getElementById(balloonId);
-        const balloonMinSize = 20;
-        const balloonMaxSize = 200;
-        let balloonSize = 50;
-        let balloonHadExploded = false;
+        const nodeElement = document.getElementById(balloonId);
+        const minSize = 20;
+        const maxSize = 200;
+        let size = 50;
+        let hadExploded = false;
 
-        const increaseSizeByPercentage = function (percentage) {
+        updateNodeFontSize();
+
+        function increaseSizeByPercentage(percentage) {
           updateSize("increase", percentage);
-        };
+        }
 
-        const decreaseSizeByPercentage = function (percentage) {
+        function decreaseSizeByPercentage(percentage) {
           updateSize("decrease", percentage);
-        };
+        }
 
-        const updateSize = function (type = "increase", percentage = 0) {
-          if (balloonHadExploded) {
+        function updateSize(type = "increase", percentage = 0) {
+          if (hadExploded) {
             return;
           }
           if (percentage <= 0) {
             return;
           }
 
-          const sizeToAddOrSubtract = (balloonSize / 100) * percentage;
-          let newSize = balloonSize;
+          const sizeToAddOrSubtract = (size / 100) * percentage;
+          let newSize = size;
 
           if (type === "increase") {
             newSize += sizeToAddOrSubtract;
-
-            if (newSize > balloonMaxSize) {
-              explode();
-            }
           } else if (type === "decrease") {
             newSize -= sizeToAddOrSubtract;
 
-            if (newSize < balloonMinSize) {
+            if (newSize < minSize) {
               return;
             }
           }
 
-          balloonSize = newSize;
+          size = newSize;
 
-          updateBalloonNodeFontSize();
-        };
+          updateNodeFontSize();
 
-        const updateBalloonNodeFontSize = function () {
-          balloonNode.style.fontSize = `${balloonSize}px`;
-        };
+          if (size > maxSize) {
+            explode();
+          }
+        }
 
-        const explode = function () {
-          balloonNode.textContent = "💥";
-          balloonHadExploded = true;
-        };
+        function updateNodeFontSize() {
+          nodeElement.style.fontSize = `${size}px`;
+        }
 
-        updateBalloonNodeFontSize();
+        function explode() {
+          nodeElement.textContent = "💥";
+          hadExploded = true;
+        }
 
         return {
           increaseSizeByPercentage,
