@@ -8,10 +8,10 @@
     <style>
       .trail {
         position: absolute;
-        width: 6px;
-        height: 6px;
-        border-radius: 3px;
-        background: teal;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: red;
       }
     </style>
   </head>
@@ -46,18 +46,22 @@
         }
 
         function addMouseMoveEventListener() {
-          window.addEventListener("mousemove", function (e) {
-            moveTrailToPosition(e.clientY, e.clientX);
+          window.addEventListener("mousemove", (e) => {
+            window.requestAnimationFrame(
+              moveTrailToPosition(e.clientY, e.clientX)
+            );
           });
         }
 
         function moveTrailToPosition(top = 0, left = 0) {
           let delay = initialDelayInMs;
+          const topMargin = 20;
+          const lefMargin = 5;
 
           trailItems.forEach((item) => {
             setTimeout(() => {
-              item.style.top = `${top}px`;
-              item.style.left = `${left}px`;
+              item.style.top = `${top + topMargin}px`;
+              item.style.left = `${left + lefMargin}px`;
             }, delay);
 
             delay += delayToAddToNextTrailElement;
