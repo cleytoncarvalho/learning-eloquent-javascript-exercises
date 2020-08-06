@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Mouse Trail</title>
+    <meta charset="utf-8" />
+
+    <style>
+      .trail {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 3px;
+        background: teal;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="trail"></div>
+    <div class="trail"></div>
+    <div class="trail"></div>
+    <div class="trail"></div>
+    <div class="trail"></div>
+    <div class="trail"></div>
+    <div class="trail"></div>
+    <div class="trail"></div>
+    <div class="trail"></div>
+    <div class="trail"></div>
+
+    <script>
+      "use strict";
+
+      const trail = createMouseTrailObject("trail");
+      trail.start();
+
+      function createMouseTrailObject(className) {
+        const trail = document.getElementsByClassName(className);
+        const trailItems = Array.from(trail);
+
+        const initialDelayInMs = 20;
+        const delayToAddToNextTrailElement = 30;
+
+        function start() {
+          addMouseMoveEventListener();
+        }
+
+        function addMouseMoveEventListener() {
+          window.addEventListener("mousemove", function (e) {
+            moveTrailToPosition(e.clientY, e.clientX);
+          });
+        }
+
+        function moveTrailToPosition(top = 0, left = 0) {
+          let delay = initialDelayInMs;
+
+          trailItems.forEach((item) => {
+            setTimeout(() => {
+              item.style.top = `${top}px`;
+              item.style.left = `${left}px`;
+            }, delay);
+
+            delay += delayToAddToNextTrailElement;
+          });
+        }
+
+        return {
+          start,
+        };
+      }
+    </script>
+  </body>
+</html>
