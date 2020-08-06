@@ -87,16 +87,19 @@ event handler is removed (so that you can’t inflate or deflate the explosion).
     </div>
 
     <script>
-      const redBalloon = balloon("balloon1");
+      const redBalloon = createBalloonObject("balloon1");
+      redBalloon.start();
 
-      function balloon(balloonId) {
+      function createBalloonObject(balloonId) {
         const nodeElement = document.getElementById(balloonId);
         const minSize = 20;
         const maxSize = 200;
         let currentSize = 50;
 
-        updateNodeFontSize(currentSize);
-        addKeyListener();
+        function start() {
+          updateNodeFontSize(currentSize);
+          addKeyListener();
+        }
 
         function addKeyListener() {
           window.addEventListener("keydown", controleKeyListener);
@@ -108,10 +111,10 @@ event handler is removed (so that you can’t inflate or deflate the explosion).
 
         function controleKeyListener(e) {
           if (e.key === "ArrowUp") {
-            redBalloon.increaseSizeByPercentage(10);
+            increaseSizeByPercentage(10);
           }
           if (e.key === "ArrowDown") {
-            redBalloon.decreaseSizeByPercentage(10);
+            decreaseSizeByPercentage(10);
           }
         }
 
@@ -158,8 +161,7 @@ event handler is removed (so that you can’t inflate or deflate the explosion).
         }
 
         return {
-          increaseSizeByPercentage,
-          decreaseSizeByPercentage,
+          start,
         };
       }
     </script>
