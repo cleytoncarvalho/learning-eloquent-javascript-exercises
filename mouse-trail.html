@@ -28,9 +28,6 @@
       function createMouseTrailObjectById(id) {
         const trail = document.getElementById(id);
         const trailItems = [];
-        const trailSize = 10;
-        const initialDelayInMs = 20;
-        const delayToAddToNextTrailElement = 30;
 
         function start() {
           checkTrailElementExists();
@@ -45,6 +42,8 @@
         }
 
         function createTrailElementsByTrailSize() {
+          const trailSize = 10;
+
           trailItems.push(trail);
 
           for (let i = 0; i < trailSize; i++) {
@@ -64,9 +63,12 @@
         }
 
         function moveTrailToPosition(top = 0, left = 0) {
-          let delay = initialDelayInMs;
+          const initialDelayInMs = 20;
+          const delayToAddToNextTrailElement = 30;
           const topMargin = 20;
           const lefMargin = 5;
+
+          let delay = initialDelayInMs;
 
           trailItems.forEach((item) => {
             setTimeout(() => {
