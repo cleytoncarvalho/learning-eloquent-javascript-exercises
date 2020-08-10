@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
 
     <style>
-      .trail {
+      #trail {
         position: absolute;
         width: 10px;
         height: 10px;
@@ -17,37 +17,47 @@
   </head>
 
   <body>
-    <div class="trail"></div>
-    <div class="trail"></div>
-    <div class="trail"></div>
-    <div class="trail"></div>
-    <div class="trail"></div>
-    <div class="trail"></div>
-    <div class="trail"></div>
-    <div class="trail"></div>
-    <div class="trail"></div>
-    <div class="trail"></div>
+    <div id="trail"></div>
 
     <script>
       "use strict";
 
-      const trail = createMouseTrailObject("trail");
+      const trail = createMouseTrailObjectById("trail");
       trail.start();
 
-      function createMouseTrailObject(className) {
-        const trail = document.getElementsByClassName(className);
-        const trailItems = Array.from(trail);
-
+      function createMouseTrailObjectById(id) {
+        const trail = document.getElementById(id);
+        const trailItems = [];
+        const trailSize = 10;
         const initialDelayInMs = 20;
         const delayToAddToNextTrailElement = 30;
 
         function start() {
+          checkTrailElementExists();
+          createTrailElementsByTrailSize();
           addMouseMoveEventListener();
+        }
+
+        function checkTrailElementExists() {
+          if (!trail) {
+            throw new Error(`Trail element '#${id}' was not found.`);
+          }
+        }
+
+        function createTrailElementsByTrailSize() {
+          trailItems.push(trail);
+
+          for (let i = 0; i < trailSize; i++) {
+            const trailClone = trail.cloneNode();
+            trail.insertAdjacentElement("afterend", trailClone);
+
+            trailItems.push(trailClone);
+          }
         }
 
         function addMouseMoveEventListener() {
           window.addEventListener("mousemove", (e) => {
-            window.requestAnimationFrame(
+            window.requestAnimationFrame(() =>
               moveTrailToPosition(e.clientY, e.clientX)
             );
           });
