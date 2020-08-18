@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Content Negotiation</title>
+    <meta charset="utf-8" />
+
+    <style>
+      .requestContent {
+        border: 1px solid #000;
+        margin-bottom: 20px;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="requestContent" data-type="text/plain"></div>
+    <div class="requestContent" data-type="text/html"></div>
+    <div class="requestContent" data-type="application/json"></div>
+    <div class="requestContent" data-type="application/rainbows+unicorns"></div>
+
+    <script>
+      const requestContent = document.querySelectorAll(".requestContent");
+
+      Array.from(requestContent).forEach((element) => {
+        const type = element.getAttribute("data-type");
+
+        element.innerHTML = "Loading...";
+
+        makeRequestForTypeAndReturnText(type)
+          .then((response) => {
+            element.innerHTML = response;
+          })
+          .catch((__) => {
+            element.innerHTML = "Failed to load the content.";
+          });
+      });
+
+      function makeRequestForTypeAndReturnText(type = "text/plain") {
+        return fetch("https://eloquentjavascript.net/author", {
+          headers: { Accept: type },
+        }).then((response) => response.text());
+      }
+    </script>
+  </body>
+</html>
