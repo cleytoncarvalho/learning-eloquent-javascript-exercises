@@ -34,8 +34,13 @@ computing the next generation.
 
     <script>
       const conwayGame = conwayGameFactory(document.getElementById("grid"));
-      conwayGame.setGridConfig({ numberOfLines: 2, numberOfCells: 2 });
+      conwayGame.setGridNumberOfLines(10);
+      conwayGame.setGridNumberOfCells(10);
       conwayGame.start();
+
+      document
+        .getElementById("next")
+        .addEventListener("click", conwayGame.turn);
 
       function conwayGameFactory(gridNode) {
         const gridData = [];
@@ -55,7 +60,6 @@ computing the next generation.
 
             for (let j = 0; j < gridConfig.numberOfCells; j++) {
               const cell = {
-                checked: false,
                 node: generateCellNode(),
               };
 
@@ -88,22 +92,92 @@ computing the next generation.
           });
         }
 
-        function setGridConfig(config = gridConfig) {
-          validateGridConfig(config);
-        }
-
-        function validateGridConfig({ numberOfLines, numberOfCells }) {
+        function setGridNumberOfLines(numberOfLines = 0) {
           if (numberOfLines <= 0) {
             throw Error("The number of lines must be greater than zero.");
           }
+
+          gridConfig.numberOfLines = numberOfLines;
+        }
+
+        function setGridNumberOfCells(numberOfCells = 0) {
           if (numberOfCells <= 0) {
-            throw Error("The number of cells must be greater than zero.");
+            throw Error("The number of lines must be greater than zero.");
           }
+
+          gridConfig.numberOfCells = numberOfCells;
+        }
+
+        function turn() {
+          updateCellsCheckedState();
+        }
+
+        function updateCellsCheckedState() {
+          // gridData.forEach((line, lineIndex) => {
+          //   const lineUp = lineIndex - 1;
+          //   const lineDown = lineIndex + 1;
+
+          //   line.cells.forEach((cell, cellIndex) => {
+          //     // const upNeighbor = gridData[lineUp]
+          //     //   ? gridData[lineUp].cells[cellIndex].node
+          //     //   : undefined;
+
+          //     // const downNeighbor = gridData[lineDown]
+          //     //   ? gridData[lineDown].cells[cellIndex].node
+          //     //   : undefined;
+
+          //     const checkedNeighbor = countCheckedNeighbors(
+          //       cellIndex,
+          //       lineIndex
+          //     );
+          //   });
+          // });
+
+          const checkedNeighbor = countCheckedNeighbors(4, 4);
+        }
+
+        function countCheckedNeighbors(lineIndex, cellIndex) {
+          let neighborsCheckedNumber = 0;
+
+          for (let x = -1; x <= 1; x++) {
+            for (let y = -1; y <= 1; y++) {
+              if (x === 0 && y === 0) {
+                continue;
+              }
+
+              const neighborLineIndex = lineIndex + x;
+              const neighborCellIndex = cellIndex + y;
+
+              // const teste = gridData
+              //   .find((__, i) => i === neighborLineIndex)
+              //   .cells.find((__, c) => c === neighborCellIndex);
+
+              // console.log(teste);
+
+              if (!gridData[neighborLineIndex]) {
+                continue;
+              }
+              if (!gridData[neighborLineIndex].cells[neighborCellIndex]) {
+                continue;
+              }
+              if (
+                gridData[neighborLineIndex].cells[neighborCellIndex].node
+                  .checked
+              ) {
+                neighborsCheckedNumber++;
+              }
+            }
+          }
+
+          console.log(gridData[lineIndex].cells[cellIndex].node);
+          console.log(neighborsCheckedNumber);
         }
 
         return {
+          setGridNumberOfLines,
+          setGridNumberOfCells,
           start,
-          setGridConfig,
+          turn,
         };
       }
     </script>
