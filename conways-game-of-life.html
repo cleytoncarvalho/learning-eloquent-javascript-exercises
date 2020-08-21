@@ -34,34 +34,30 @@ computing the next generation.
 
     <script>
       const conwayGame = conwayGameFactory(document.getElementById("grid"));
-      conwayGame.setGridNumberOfLines(10);
-      conwayGame.setGridNumberOfCells(10);
+      conwayGame.setGridWidth(10);
+      conwayGame.setGridHeight(10);
       conwayGame.start();
 
-      document
-        .getElementById("next")
-        .addEventListener("click", conwayGame.turn);
+      const nextGelerationBtn = document.getElementById("next");
+      nextGelerationBtn.addEventListener("click", conwayGame.turn);
 
       function conwayGameFactory(gridNode) {
         const gridData = [];
-        const gridConfig = { numberOfLines: 15, numberOfCells: 30 };
-
-        function start() {
-          generateGridData();
-          printGridToHtml();
-        }
+        const gridSize = { width: 15, height: 30 };
 
         function generateGridData() {
-          for (let i = 0; i < gridConfig.numberOfLines; i++) {
+          for (let x = 0; x < gridSize.width; x++) {
             const line = {
               cells: [],
               node: generateLineNode(),
             };
 
-            for (let j = 0; j < gridConfig.numberOfCells; j++) {
-              const cell = {
-                node: generateCellNode(),
-              };
+            for (let y = 0; y < gridSize.height; y++) {
+              const cell = {};
+
+              cell.checked = Math.random() < 0.5;
+              cell.position = { x, y };
+              cell.node = generateCellNode(cell);
 
               line.cells.push(cell);
             }
@@ -75,10 +71,10 @@ computing the next generation.
           return lineNode;
         }
 
-        function generateCellNode() {
+        function generateCellNode(cell) {
           const cellNode = document.createElement("input");
           cellNode.type = "checkbox";
-          cellNode.checked = false;
+          cellNode.checked = cell.checked;
           return cellNode;
         }
 
@@ -92,51 +88,43 @@ computing the next generation.
           });
         }
 
-        function setGridNumberOfLines(numberOfLines = 0) {
-          if (numberOfLines <= 0) {
-            throw Error("The number of lines must be greater than zero.");
-          }
-
-          gridConfig.numberOfLines = numberOfLines;
-        }
-
-        function setGridNumberOfCells(numberOfCells = 0) {
-          if (numberOfCells <= 0) {
-            throw Error("The number of lines must be greater than zero.");
-          }
-
-          gridConfig.numberOfCells = numberOfCells;
-        }
-
-        function turn() {
-          updateCellsCheckedState();
-        }
-
         function updateCellsCheckedState() {
-          // gridData.forEach((line, lineIndex) => {
-          //   const lineUp = lineIndex - 1;
-          //   const lineDown = lineIndex + 1;
-
-          //   line.cells.forEach((cell, cellIndex) => {
-          //     // const upNeighbor = gridData[lineUp]
-          //     //   ? gridData[lineUp].cells[cellIndex].node
-          //     //   : undefined;
-
-          //     // const downNeighbor = gridData[lineDown]
-          //     //   ? gridData[lineDown].cells[cellIndex].node
-          //     //   : undefined;
-
-          //     const checkedNeighbor = countCheckedNeighbors(
-          //       cellIndex,
-          //       lineIndex
-          //     );
-          //   });
-          // });
-
-          const checkedNeighbor = countCheckedNeighbors(4, 4);
+          gridData.map((line) =>
+            line.cells
+              .map(updateCellCheckedStateInData)
+              .map(updateCellCheckedStateInNode)
+          );
         }
 
-        function countCheckedNeighbors(lineIndex, cellIndex) {
+        function updateCellCheckedStateInData(cell) {
+          cell.checked = getNewCellCheckedState(cell);
+          return cell;
+        }
+
+        function updateCellCheckedStateInNode(cell) {
+          cell.node.checked = cell.checked;
+          return cell;
+        }
+
+        function getNewCellCheckedState(cell) {
+          const checkedNeighbor = getCellCheckedNeighborsNumber(cell);
+
+          const currentState = cell.node.checked;
+
+          if (currentState) {
+            if (checkedNeighbor < 2 || checkedNeighbor > 3) {
+              return false;
+            }
+          } else {
+            if (checkedNeighbor === 3) {
+              return true;
+            }
+          }
+
+          return currentState;
+        }
+
+        function getCellCheckedNeighborsNumber(cell) {
           let neighborsCheckedNumber = 0;
 
           for (let x = -1; x <= 1; x++) {
@@ -145,14 +133,8 @@ computing the next generation.
                 continue;
               }
 
-              const neighborLineIndex = lineIndex + x;
-              const neighborCellIndex = cellIndex + y;
-
-              // const teste = gridData
-              //   .find((__, i) => i === neighborLineIndex)
-              //   .cells.find((__, c) => c === neighborCellIndex);
-
-              // console.log(teste);
+              const neighborLineIndex = cell.position.x + x;
+              const neighborCellIndex = cell.position.y + y;
 
               if (!gridData[neighborLineIndex]) {
                 continue;
@@ -169,13 +151,37 @@ computing the next generation.
             }
           }
 
-          console.log(gridData[lineIndex].cells[cellIndex].node);
-          console.log(neighborsCheckedNumber);
+          return neighborsCheckedNumber;
+        }
+
+        function setGridWidth(width = 0) {
+          if (width <= 0) {
+            throw Error("The width be greater than zero.");
+          }
+
+          gridSize.width = width;
+        }
+
+        function setGridHeight(height = 0) {
+          if (height <= 0) {
+            throw Error("The height must be greater than zero.");
+          }
+
+          gridSize.height = height;
+        }
+
+        function start() {
+          generateGridData();
+          printGridToHtml();
+        }
+
+        function turn() {
+          updateCellsCheckedState();
         }
 
         return {
-          setGridNumberOfLines,
-          setGridNumberOfCells,
+          setGridWidth,
+          setGridHeight,
           start,
           turn,
         };
