@@ -89,11 +89,8 @@ computing the next generation.
         }
 
         function updateCellsCheckedState() {
-          gridData.map((line) =>
-            line.cells
-              .map(updateCellCheckedStateInData)
-              .map(updateCellCheckedStateInNode)
-          );
+          gridData.map((line) => line.cells.map(updateCellCheckedStateInData));
+          gridData.map((line) => line.cells.map(updateCellCheckedStateInNode));
         }
 
         function updateCellCheckedStateInData(cell) {
